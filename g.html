@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador Interactivo: Inteligencia Artificial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .concept-box {
+            transition: all 0.3s ease-in-out;
+        }
+        .concept-box.active {
+            @apply border-blue-600 scale-105 bg-blue-50;
+        }
+        .accordion-content {
+            transition: max-height 0.3s ease-out;
+        }
+        .app-icon {
+            transition: all 0.2s ease-in-out;
+        }
+        .app-icon.active {
+            @apply bg-blue-100 border-blue-500 scale-105;
+        }
+    </style>
+    <!-- Chosen Palette: Calm Harmony (Warm neutrals bg-gray-50, text-gray-800, with a professional text-blue-700 accent) -->
+    <!-- Application Structure Plan: The SPA is structured as a thematic, single-page dashboard rather than a linear report. Navigation (Inicio, Conceptos, Aplicaciones, Impacto, Ética) scrolls to dedicated sections. This structure allows users to explore AI non-linearly, either diving deep into technical concepts (like the ML>DL interactive diagram) or jumping straight to real-world applications or data. Interactions (toggles, tabs, accordions, charts) are designed to reveal information on demand, reducing cognitive load and making the dense topic of AI more digestible. This is more user-friendly than a multi-page site or a static document. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: What is AI? -> Goal: Inform -> Viz: Text Block -> Interaction: None -> Justification: Clear baseline definition. -> Library/Method: HTML.
+        - Report Info: Types of AI (ANI/AGI/ASI) -> Goal: Inform/Compare -> Viz: Toggle Buttons -> Interaction: Click button to show/hide description. -> Justification: Hides complexity until requested. -> Library/Method: JS Toggle.
+        - Report Info: Relationship (AI > ML > DL) -> Goal: Organize/Inform -> Viz: HTML/CSS Diagram -> Interaction: Click on a box to highlight and show text. -> Justification: Visually shows hierarchy without complex/forbidden SVG. -> Library/Method: HTML/Tailwind + JS.
+        - Report Info: Applications (Health, Finance) -> Goal: Inform -> Viz: Icon Grid -> Interaction: Click icon to show description. -> Justification: More engaging than a bullet list. -> Library/Method: HTML/Unicode + JS.
+        - Report Info: Market Growth/Investment -> Goal: Inform/Change -> Viz: Line & Bar Charts -> Interaction: Hover tooltips. -> Justification: Standard, clear way to show quantitative data. -> Library/Method: Chart.js (Canvas).
+        - Report Info: Ethical Issues -> Goal: Inform/Organize -> Viz: Accordion -> Interaction: Click to expand/collapse. -> Justification: Organizes complex qualitative points concisely. -> Library/Method: HTML + JS.
+        -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans leading-relaxed">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl md:text-2xl font-bold text-blue-700">Explorador de IA</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#inicio" class="nav-link text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Inicio</a>
+                        <a href="#conceptos" class="nav-link text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Conceptos Clave</a>
+                        <a href="#aplicaciones" class="nav-link text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Aplicaciones</a>
+                        <a href="#impacto" class="nav-link text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Impacto y Datos</a>
+                        <a href="#etica" class="nav-link text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Ética y Futuro</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <select id="mobile-nav" class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="#inicio">Inicio</option>
+                        <option value="#conceptos">Conceptos Clave</option>
+                        <option value="#aplicaciones">Aplicaciones</option>
+                        <option value="#impacto">Impacto y Datos</option>
+                        <option value="#etica">Ética y Futuro</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="inicio" class="mb-16 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">¿Qué es la Inteligencia Artificial?</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-700">
+                La Inteligencia Artificial (IA) es un campo de la informática dedicado a la creación de sistemas que pueden simular la inteligencia humana para realizar tareas. Esto incluye aprender, razonar, percibir, resolver problemas y tomar decisiones. Esta aplicación interactiva desglosa los componentes, aplicaciones e implicaciones de la IA basados en un análisis profundo del campo.
+            </p>
+        </section>
+
+        <section id="conceptos" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Conceptos Clave</h2>
+            <p class="text-center text-gray-700 max-w-2xl mx-auto mb-8">
+                La IA no es un solo concepto, sino un ecosistema de ideas y tecnologías. Esta sección le permite explorar las clasificaciones fundamentales y las disciplinas que impulsan la IA moderna. Interactúe con los elementos para aprender más.
+            </p>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Tipos de IA por Capacidad</h3>
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+                    <button class="ai-type-btn flex-1 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100" data-target="ani">IA Estrecha (ANI)</button>
+                    <button class="ai-type-btn flex-1 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100" data-target="agi">IA General (AGI)</button>
+                    <button class="ai-type-btn flex-1 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100" data-target="asi">Superinteligencia (ASI)</button>
+                </div>
+                <div id="ai-type-content" class="p-4 bg-gray-50 rounded-lg min-h-[100px]">
+                    <div id="ani" class="ai-type-panel">
+                        <h4 class="font-bold text-blue-700">IA Estrecha (Artificial Narrow Intelligence)</h4>
+                        <p>La forma más común de IA hoy en día. Está diseñada y entrenada para realizar una tarea específica (ej. reconocimiento de voz, filtros de spam). No posee conciencia ni inteligencia más allá de su función programada.</p>
+                    </div>
+                    <div id="agi" class="ai-type-panel hidden">
+                        <h4 class="font-bold text-blue-700">IA General (Artificial General Intelligence)</h4>
+                        <p>Una forma teórica de IA que poseería la capacidad de entender, aprender y aplicar su inteligencia para resolver cualquier problema, de forma similar a un ser humano. Aún no se ha logrado.</p>
+                    </div>
+                    <div id="asi" class="ai-type-panel hidden">
+                        <h4 class="font-bold text-blue-700">Superinteligencia (Artificial Superintelligence)</h4>
+                        <p>Un tipo hipotético de IA que no solo imitaría o igualaría la inteligencia humana, sino que la superaría con creces en todos los aspectos, desde la creatividad hasta la resolución de problemas y la sabiduría general.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Jerarquía de la IA</h3>
+                    <p class="text-sm text-gray-600 mb-4">Haga clic en un concepto para ver su definición.</p>
+                    <div class="space-y-4">
+                        <div class="concept-box p-4 border-2 border-gray-200 rounded-lg cursor-pointer" data-target="desc-ia">
+                            <h4 class="font-bold text-lg">Inteligencia Artificial (IA)</h4>
+                        </div>
+                        <div class="ml-6 space-y-4">
+                            <div class="concept-box p-4 border-2 border-gray-200 rounded-lg cursor-pointer" data-target="desc-ml">
+                                <h4 class="font-bold text-lg">Aprendizaje Automático (ML)</h4>
+                            </div>
+                            <div class="ml-6 space-y-4">
+                                <div class="concept-box p-4 border-2 border-gray-200 rounded-lg cursor-pointer" data-target="desc-dl">
+                                    <h4 class="font-bold text-lg">Aprendizaje Profundo (DL)</h4>
+                                </div>
+                                <div class="ml-6 space-y-4">
+                                    <div class="concept-box p-4 border-2 border-gray-200 rounded-lg cursor-pointer" data-target="desc-nn">
+                                        <h4 class="font-bold text-lg">Redes Neuronales</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="concept-description" class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[120px]">
+                        <p class="italic text-gray-500">Seleccione un concepto para leer su descripción aquí.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Disciplinas Fundamentales</h3>
+                    <div>
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                                <button class="discipline-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-blue-600 text-blue-700" data-target="nlp">Procesamiento de Lenguaje (NLP)</button>
+                                <button class="discipline-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-target="cv">Visión por Computador (CV)</button>
+                            </nav>
+                        </div>
+                        <div class="py-4">
+                            <div id="nlp" class="discipline-panel">
+                                <h4 class="font-bold text-lg mb-2">Procesamiento de Lenguaje Natural (NLP)</h4>
+                                <p>Es la rama de la IA que permite a las máquinas entender, interpretar y generar lenguaje humano. Es la tecnología detrás de los chatbots, traductores automáticos y análisis de sentimientos.</p>
+                            </div>
+                            <div id="cv" class="discipline-panel hidden">
+                                <h4 class="font-bold text-lg mb-2">Visión por Computador (CV)</h4>
+                                <p>Permite a las computadoras "ver" e interpretar información visual del mundo, como imágenes y videos. Se utiliza en el reconocimiento facial, los vehículos autónomos y el diagnóstico médico por imagen.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="aplicaciones" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Aplicaciones en el Mundo Real</h2>
+            <p class="text-center text-gray-700 max-w-2xl mx-auto mb-8">
+                La IA ya no es ciencia ficción; es una herramienta práctica que transforma industrias. Explore algunas de las aplicaciones más impactantes haciendo clic en los íconos a continuación para ver cómo la IA está generando valor.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="app-icon flex flex-col items-center p-4 bg-white rounded-lg shadow-md border-2 border-transparent cursor-pointer hover:shadow-lg" data-target="app-salud">
+                    <span class="text-5xl mb-2">🩺</span>
+                    <span class="font-semibold">Salud</span>
+                </div>
+                <div class="app-icon flex flex-col items-center p-4 bg-white rounded-lg shadow-md border-2 border-transparent cursor-pointer hover:shadow-lg" data-target="app-finanzas">
+                    <span class="text-5xl mb-2">💳</span>
+                    <span class="font-semibold">Finanzas</span>
+                </div>
+                <div class="app-icon flex flex-col items-center p-4 bg-white rounded-lg shadow-md border-2 border-transparent cursor-pointer hover:shadow-lg" data-target="app-transporte">
+                    <span class="text-5xl mb-2">🚗</span>
+                    <span class="font-semibold">Transporte</span>
+                </div>
+                <div class="app-icon flex flex-col items-center p-4 bg-white rounded-lg shadow-md border-2 border-transparent cursor-pointer hover:shadow-lg" data-target="app-entretenimiento">
+                    <span class="text-5xl mb-2">🎬</span>
+                    <span class="font-semibold">Entretenimiento</span>
+                </div>
+            </div>
+            <div id="app-description" class="p-6 bg-white rounded-lg shadow-lg min-h-[150px]">
+                <p class="italic text-gray-500">Seleccione una aplicación para ver su descripción y ejemplos.</p>
+            </div>
+        </section>
+
+        <section id="impacto" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Impacto y Crecimiento</h2>
+            <p class="text-center text-gray-700 max-w-2xl mx-auto mb-8">
+                El crecimiento de la IA es exponencial, impulsado por inversiones masivas y una adopción cada vez mayor. Los siguientes gráficos visualizan el impacto económico y las proyecciones de mercado basadas en datos recientes.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">Proyección del Mercado Global de IA (USD Billones)</h3>
+                    <div class="chart-container">
+                        <canvas id="marketGrowthChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">Inversión en IA por Sector (2024)</h3>
+                    <div class="chart-container">
+                        <canvas id="investmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="etica" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Ética y Futuro</h2>
+            <p class="text-center text-gray-700 max-w-2xl mx-auto mb-8">
+                A medida que la IA se vuelve más poderosa, surgen importantes desafíos éticos. Es crucial abordar el sesgo, la transparencia y el impacto social. Explore los debates clave y la visión a futuro de la IA.
+            </p>
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Desafíos Éticos Clave</h3>
+                <div class="space-y-2">
+                    <div class="border border-gray-200 rounded-lg">
+                        <button class="accordion-header flex justify-between items-center w-full p-4 text-left font-medium text-gray-800 hover:bg-gray-50">
+                            <span>Sesgo y Equidad en los Datos</span>
+                            <span class="accordion-arrow transform transition-transform duration-200">▼</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden px-4 pb-0">
+                            <p class="py-2 text-gray-700">Los sistemas de IA se entrenan con datos del mundo real. Si estos datos contienen sesgos históricos (raciales, de género, etc.), la IA los aprenderá y perpetuará, llevando a decisiones injustas en áreas como la contratación o la justicia penal.</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg">
+                        <button class="accordion-header flex justify-between items-center w-full p-4 text-left font-medium text-gray-800 hover:bg-gray-50">
+                            <span>Desplazamiento Laboral y Economía</span>
+                            <span class="accordion-arrow transform transition-transform duration-200">▼</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden px-4 pb-0">
+                            <p class="py-2 text-gray-700">La automatización impulsada por la IA puede realizar tareas cognitivas y manuales, amenazando con desplazar millones de empleos. Esto plantea preguntas sobre la reconversión laboral, la desigualdad de ingresos y la necesidad de nuevas redes de seguridad social.</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg">
+                        <button class="accordion-header flex justify-between items-center w-full p-4 text-left font-medium text-gray-800 hover:bg-gray-50">
+                            <span>Transparencia y la "Caja Negra"</span>
+                            <span class="accordion-arrow transform transition-transform duration-200">▼</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden px-4 pb-0">
+                            <p class="py-2 text-gray-700">Muchos modelos de Aprendizaje Profundo son "cajas negras", lo que significa que incluso sus creadores no pueden explicar completamente cómo llegan a una decisión específica. Esta falta de transparencia es problemática en campos críticos como la medicina o las finanzas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">La Próxima Frontera</h3>
+                    <p class="text-gray-700">El futuro de la IA se centra en la búsqueda de la IA General (AGI), la mejora de la colaboración humano-IA y el desarrollo de una IA más explicable (XAI). El objetivo es crear sistemas que no solo sean inteligentes, sino también seguros, éticos y alineados con los valores humanos.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 mt-16">
+        <div class="container mx-auto px-6 py-4 text-center text-sm">
+            © 2025 Explorador Interactivo de IA. Creado para fines demostrativos.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const conceptDescriptions = {
+                'desc-ia': {
+                    title: 'Inteligencia Artificial (IA)',
+                    text: 'El campo general de la informática enfocado en crear máquinas que simulan funciones cognitivas humanas como aprender y resolver problemas.'
+                },
+                'desc-ml': {
+                    title: 'Aprendizaje Automático (ML)',
+                    text: 'Un subcampo de la IA. En lugar de ser programadas explícitamente, las máquinas usan algoritmos para analizar grandes cantidades de datos, aprender de ellos y tomar decisiones.'
+                },
+                'desc-dl': {
+                    title: 'Aprendizaje Profundo (DL)',
+                    text: 'Un subcampo del ML que utiliza Redes Neuronales con múltiples capas ("profundas") para resolver problemas complejos y encontrar patrones sutiles en los datos.'
+                },
+                'desc-nn': {
+                    title: 'Redes Neuronales',
+                    text: 'El fundamento del Aprendizaje Profundo. Son sistemas de computación inspirados en la estructura del cerebro humano, compuestos por nodos interconectados.'
+                }
+            };
+
+            const appDescriptions = {
+                'app-salud': {
+                    title: 'IA en la Salud',
+                    text: 'Revolucionando el diagnóstico y tratamiento. La IA puede analizar imágenes médicas (rayos X, resonancias magnéticas) para detectar enfermedades como el cáncer con mayor precisión que los radiólogos. También acelera el descubrimiento de nuevos fármacos.'
+                },
+                'app-finanzas': {
+                    title: 'IA en las Finanzas',
+                    text: 'Utilizada para la detección de fraudes en tiempo real, analizando millones de transacciones para detectar patrones anómalos. También impulsa el trading algorítmico de alta frecuencia y los asesores "robo-advisors" personalizados.'
+                },
+                'app-transporte': {
+                    title: 'IA en el Transporte',
+                    text: 'El cerebro detrás de los vehículos autónomos. La IA (principalmente Visión por Computador) procesa datos de sensores (cámaras, LiDAR) para navegar de forma segura, identificar peatones, señales de tráfico y otros vehículos.'
+                },
+                'app-entretenimiento': {
+                    title: 'IA en el Entretenimiento',
+                    text: 'Impulsa los motores de recomendación en plataformas como Netflix y Spotify, analizando su historial para sugerir contenido nuevo. También se usa en la creación de efectos visuales (VFX) y la generación de música y arte.'
+                }
+            };
+
+            document.querySelectorAll('.nav-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.addEventListener('change', () => {
+                const targetId = mobileNav.value;
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+
+            const aiTypeButtons = document.querySelectorAll('.ai-type-btn');
+            const aiTypePanels = document.querySelectorAll('.ai-type-panel');
+            aiTypeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    aiTypeButtons.forEach(btn => btn.classList.remove('bg-blue-100', 'border-blue-500'));
+                    button.classList.add('bg-blue-100', 'border-blue-500');
+                    
+                    const target = button.dataset.target;
+                    aiTypePanels.forEach(panel => {
+                        if (panel.id === target) {
+                            panel.classList.remove('hidden');
+                        } else {
+                            panel.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+            if (aiTypeButtons.length > 0) {
+                aiTypeButtons[0].click();
+            }
+            
+            const conceptBoxes = document.querySelectorAll('.concept-box');
+            const conceptDescriptionEl = document.getElementById('concept-description');
+            conceptBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    conceptBoxes.forEach(b => b.classList.remove('active'));
+                    box.classList.add('active');
+                    
+                    const desc = conceptDescriptions[box.dataset.target];
+                    conceptDescriptionEl.innerHTML = `<h5 class="font-bold text-blue-700">${desc.title}</h5><p>${desc.text}</p>`;
+                });
+            });
+
+            const disciplineTabs = document.querySelectorAll('.discipline-tab');
+            const disciplinePanels = document.querySelectorAll('.discipline-panel');
+            disciplineTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    disciplineTabs.forEach(t => t.classList.remove('border-blue-600', 'text-blue-700'));
+                    disciplineTabs.forEach(t => t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+                    
+                    tab.classList.add('border-blue-600', 'text-blue-700');
+                    tab.classList.remove('border-transparent', 'text-gray-500');
+                    
+                    const target = tab.dataset.target;
+                    disciplinePanels.forEach(panel => {
+                        if (panel.id === target) {
+                            panel.classList.remove('hidden');
+                        } else {
+                            panel.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+            
+            const appIcons = document.querySelectorAll('.app-icon');
+            const appDescriptionEl = document.getElementById('app-description');
+            appIcons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    appIcons.forEach(i => i.classList.remove('active'));
+                    icon.classList.add('active');
+                    
+                    const desc = appDescriptions[icon.dataset.target];
+                    appDescriptionEl.innerHTML = `<h4 class="font-bold text-xl text-blue-700 mb-2">${desc.title}</h4><p>${desc.text}</p>`;
+                });
+            });
+            
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const arrow = header.querySelector('.accordion-arrow');
+                    
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        arrow.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        arrow.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            const marketCtx = document.getElementById('marketGrowthChart').getContext('2d');
+            new Chart(marketCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                    datasets: [{
+                        label: 'Mercado de IA (USD Billones)',
+                        data: [210, 280, 375, 500, 670, 900, 1200],
+                        borderColor: 'rgb(37, 99, 235)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+            new Chart(investmentCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tech', 'Salud', 'Finanzas', 'Retail', 'Automotriz'],
+                    datasets: [{
+                        label: 'Inversión (USD Billones)',
+                        data: [85, 55, 42, 30, 25],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(234, 179, 8, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(139, 92, 246, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(234, 179, 8)',
+                            'rgb(249, 115, 22)',
+                            'rgb(139, 92, 246)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
